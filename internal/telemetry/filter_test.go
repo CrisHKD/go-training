@@ -6,12 +6,13 @@ import (
 	"testing"
 )
 
-func generateMetrics(n int) []Metric{
-	data := make([]Metric,n)
+// 
+func generateMetrics(n int) []Metric {
+	data := make([]Metric, n)
 
-	for i := 0; i < n; i++{
+	for i := 0; i < n; i++ {
 		data[i] = Metric{
-			ID: "metric-" + strconv.Itoa(i),
+			ID:    "metric-" + strconv.Itoa(i),
 			Value: rand.Float64() * 100.0,
 		}
 	}
@@ -19,7 +20,7 @@ func generateMetrics(n int) []Metric{
 	return data
 }
 
-func TestIndependencia(t *testing.T){
+func TestIndependencia(t *testing.T) {
 	rand.Seed(34)
 
 	original := generateMetrics(20)
@@ -27,7 +28,7 @@ func TestIndependencia(t *testing.T){
 
 	filtered := FilterHightUsage(original, threshold)
 
-	if len(filtered) == 0{
+	if len(filtered) == 0 {
 		original[0].Value = 51
 		filtered = FilterHightUsage(original, threshold)
 	}
@@ -43,7 +44,7 @@ func TestIndependencia(t *testing.T){
 	}
 
 	if sourceIdx == -1 {
-		t.Fatalf("no se encontro en el original el ID: %s",id)
+		t.Fatalf("no se encontro en el original el ID: %s", id)
 	}
 
 	before := original[sourceIdx].Value
@@ -61,7 +62,6 @@ func TestFiltrado_ConteoCorrecto(t *testing.T) {
 	original := generateMetrics(10)
 	threshold := 70.0
 
-	// Conteo esperado
 	expected := 0
 	for _, m := range original {
 		if m.Value > threshold {
@@ -75,7 +75,6 @@ func TestFiltrado_ConteoCorrecto(t *testing.T) {
 		t.Fatalf("conteo incorrecto: esperado %d, obtenido %d", expected, len(filtered))
 	}
 
-	// Además, validamos que todos los filtrados realmente cumplen
 	for _, m := range filtered {
 		if m.Value <= threshold {
 			t.Fatalf("se coló una métrica con Value=%v (threshold=%v)", m.Value, threshold)
